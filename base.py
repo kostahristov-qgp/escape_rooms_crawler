@@ -136,11 +136,10 @@ class RoomsCrawler(DriverExtension):
 
             # Prepare data
             entries = self.scraped_data["scraped_data"]
-            try:
-                target_date = entries[0]["date"]
-            except IndexError:
-                return
-            target_date_dt = datetime.strptime(target_date, "%Y-%m-%d").date()
+
+            # Write room name and URL if not present
+            worksheet.update("A1", [[room]])
+            worksheet.update("C1", [[room_url]])
 
             # === Multi-week layout (repeat your existing weekly block for every week present in entries) ===
 
@@ -247,9 +246,7 @@ class RoomsCrawler(DriverExtension):
                 for i, date in enumerate(week_date_strs):
                     if date not in weeks_map[week_start]:
                         continue
-                    has_empty_time_false = any(
-                        e["date"] == date and not e.get("time") and e.get("available") is False for e in entries
-                    )
+                    has_empty_time_false = any(e["date"] == date and not e.get("time") and e.get("available") is False for e in entries)
                     if has_empty_time_false:
                         col_letter = chr(ord("B") + i)
                         for j in range(header_row + 1, header_row + 1 + len(used_times)):
