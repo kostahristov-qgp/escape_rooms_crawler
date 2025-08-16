@@ -179,36 +179,36 @@ class RoomsCrawler(DriverExtension):
                         format_cell_range(worksheet, f"{col_letter}{header_row}", CellFormat(textFormat=TextFormat(bold=True)))
                         sleep(1)
 
-            # Mark current date header in pink (only if today is in THIS week’s 7-day header)
-            today = datetime.now().date()
-            today_str = today.strftime("%Y-%m-%d")
+                # Mark current date header in pink (only if today is in THIS week’s 7-day header)
+                today = datetime.now().date()
+                today_str = today.strftime("%Y-%m-%d")
 
-            if today_str in week_date_strs:
-                today_col_idx = week_date_strs.index(today_str)
-                sleep(1)
-                today_col_letter = chr(ord("B") + today_col_idx)
+                if today_str in week_date_strs:
+                    today_col_idx = week_date_strs.index(today_str)
+                    sleep(1)
+                    today_col_letter = chr(ord("B") + today_col_idx)
 
-                # --- Reset last 3 days (if present in this week) ---
-                for i in range(1, 4):  # 1, 2, 3 days before today
-                    prev_date = (today - timedelta(days=i)).strftime("%Y-%m-%d")
-                    if prev_date in week_date_strs:
-                        prev_col_idx = week_date_strs.index(prev_date)
-                        sleep(1)
-                        prev_col_letter = chr(ord("B") + prev_col_idx)
-                        format_cell_range(
-                            worksheet,
-                            f"{prev_col_letter}{header_row}",
-                            CellFormat(backgroundColor=Color(1, 1, 1)),  # reset to white
-                        )
-                        sleep(1)
+                    # --- Reset last 3 days (if present in this week) ---
+                    for i in range(1, 4):  # 1, 2, 3 days before today
+                        prev_date = (today - timedelta(days=i)).strftime("%Y-%m-%d")
+                        if prev_date in week_date_strs:
+                            prev_col_idx = week_date_strs.index(prev_date)
+                            sleep(1)
+                            prev_col_letter = chr(ord("B") + prev_col_idx)
+                            format_cell_range(
+                                worksheet,
+                                f"{prev_col_letter}{header_row}",
+                                CellFormat(backgroundColor=Color(1, 1, 1)),  # reset to white
+                            )
+                            sleep(1)
 
-                # --- Mark today pink ---
-                format_cell_range(
-                    worksheet,
-                    f"{today_col_letter}{header_row}",
-                    CellFormat(backgroundColor=Color(1.0, 0.8, 0.9)),  # pink
-                )
-                sleep(1)
+                    # --- Mark today pink ---
+                    format_cell_range(
+                        worksheet,
+                        f"{today_col_letter}{header_row}",
+                        CellFormat(backgroundColor=Color(1.0, 0.8, 0.9)),  # pink
+                    )
+                    sleep(1)
 
                 # Add week start in full format at A-(header_row - 1) just like before
                 week_start_full = week_start.strftime("%Y.%m.%d")
