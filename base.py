@@ -30,6 +30,8 @@ class RoomsCrawler(DriverExtension):
     NEXT_DAYS_SELECTOR: str = ""
     NEXT_BUTTON_PRESS_WAIT_TIME: int = 7  # waiting time after next button presses
 
+    MAX_DAYS_TO_POPULATE = 7
+
     def __init__(self, sitename):
         super().__init__()
         self.sitename = sitename
@@ -387,7 +389,7 @@ class RoomsCrawler(DriverExtension):
         valid_dates = sorted(set(e["date"] for e in entries if e.get("time") and isinstance(e.get("available"), bool)))
 
         # Filter out dates that are older than current day
-        valid_dates = [d for d in valid_dates if datetime.strptime(d, "%Y-%m-%d").date() >= datetime.now().date()][:30]
+        valid_dates = [d for d in valid_dates if datetime.strptime(d, "%Y-%m-%d").date() >= datetime.now().date()][: self.MAX_DAYS_TO_POPULATE]
 
         filtered = []
         for date_str in valid_dates:
