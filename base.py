@@ -30,8 +30,6 @@ class RoomsCrawler(DriverExtension):
     NEXT_DAYS_SELECTOR: str = ""
     NEXT_BUTTON_PRESS_WAIT_TIME: int = 7  # waiting time after next button presses
 
-    MAX_DAYS_TO_POPULATE = 7
-
     def __init__(self, sitename):
         super().__init__()
         self.sitename = sitename
@@ -40,8 +38,6 @@ class RoomsCrawler(DriverExtension):
         pass
 
     def get_disabled_slots(self):
-        if not self.NEXT_DAYS_SELECTOR:
-            return
         unique_entries = []
         no_new_counter = 0
         for _ in range(self.NEXT_BUTTON_PRESSES_NUM):
@@ -389,7 +385,16 @@ class RoomsCrawler(DriverExtension):
         valid_dates = sorted(set(e["date"] for e in entries if e.get("time") and isinstance(e.get("available"), bool)))
 
         # Filter out dates that are older than current day
-        valid_dates = [d for d in valid_dates if datetime.strptime(d, "%Y-%m-%d").date() >= datetime.now().date()][: self.MAX_DAYS_TO_POPULATE]
+        # valid_dates = [d for d in valid_dates if datetime.strptime(d, "%Y-%m-%d").date() >= datetime.now().date()][: self.MAX_DAYS_TO_POPULATE]
+
+        today = datetime.now().date()
+        # Calculate end of next week (Sunday)
+        # weekday(): Monday = 0, Sunday = 6
+        days_until_sunday = 6 - today.weekday()  # days left in this week
+        end_of_next_week = today + timedelta(days=days_until_sunday + 7)  # next week's Sunday
+
+        # Filter valid dates
+        valid_dates = [d for d in valid_dates if today <= datetime.strptime(d, "%Y-%m-%d").date() <= end_of_next_week]
 
         filtered = []
         for date_str in valid_dates:
@@ -407,8 +412,13 @@ class RoomsCrawler(DriverExtension):
                     if e["time"] != "full day":
                         continue
                 if date_obj == now.date():
-                    if time_obj <= now.time():
-                        continue
+                    try:
+                        time_obj = datetime.strptime(recorded_time, "%H:%M").time()
+                        if time_obj <= now.time():
+                            continue
+                    except ValueError:
+                        if e["time"] != "full day":
+                            continue
                 filtered.append(e)
 
         if filtered:
@@ -424,8 +434,9 @@ class RoomsCrawler(DriverExtension):
                     self.load_html(start_info["url"], wait_time=10)
                 self.entries = []
                 self.scrape_room()
-                self.get_disabled_slots()
-                self.mark_always_disabled_slots()
+                if self.NEXT_DAYS_SELECTOR:
+                    self.get_disabled_slots()
+                    self.mark_always_disabled_slots()
                 try:
                     self.entries.sort(key=lambda entry: (entry.get("date", ""), entry.get("time", "").split("-")[0].strip()))
                 except Exception:
