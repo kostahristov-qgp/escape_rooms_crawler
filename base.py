@@ -372,10 +372,13 @@ class RoomsCrawler(DriverExtension):
         seen = set()
         for entry in entries:
             # We'll create a unique key based on date, time, and availability
-            key = (entry["date"], entry["time"], entry["available"])
-            if key not in seen:
-                seen.add(key)
-                unique_entries.append(entry)
+            try:
+                key = (entry["date"], entry["time"], entry["available"])
+                if key not in seen:
+                    seen.add(key)
+                    unique_entries.append(entry)
+            except KeyError:
+                pass
 
         entries = unique_entries
 
