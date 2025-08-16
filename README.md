@@ -1,48 +1,69 @@
 ✅ Setup Instructions
 
-1. Install Python and Required Packages (Required)
-	1.	Navigate to the project folder.
-	2.	Double-click setup_environment.bat.
-➝ This will automatically install Python and all required packages.
+1. Install Python and Required Packages
+
+To set up the environment:
+ • Double-click the setup_environment.bat file.
+ • This will automatically install Python and all required packages.
 
 ⸻
 
-2. Schedule Daily Scraping (⚙️ Optional)
+2. Schedule Daily Scraping (Optional)
 
-To run scrapers every day automatically:
+To run the scrapers automatically every day:
 
-Step-by-Step Guide
-	1.	Press Win + R, type taskschd.msc, and press Enter.
-	2.	In Task Scheduler, click Create Basic Task… (right panel).
-	3.	Name the task: Run Daily Scrapers.
-	4.	Trigger: choose Daily, set start date & time (e.g. 09:00 AM Bulgarian time).
-	5.	Action: choose Start a program, then browse to run_crawlers.bat inside the kosta_hristov_project folder.
-	6.	Click Finish.
-
-⸻
-
-3. Export to Google Sheets (⚙️ Optional)
-	1.	Follow this guide 👉 Scrapfly – Google Sheets Setup.
-	2.	Save the credentials JSON file as:
-kosta_hristov_credentials.json
-	3.	Place it directly in the kosta_hristov_project folder.
-	4.	Share the target Google Sheet with the service account email (ends with @<your-project>.iam.gserviceaccount.com).
-
-⸻
-
-4. Export to Excel + Google Drive (⚙️ Alternative)
-
-If you don’t want to use Google Sheets API:
-	1.	Install Google Drive for Desktop and sign in.
-	2.	A Google Drive folder will appear on your computer.
-	3.	Save your Excel file (Escape Rooms - Statuses.xlsx) inside that folder.
-	4.	It will sync automatically to your Google Drive.
+🔧 Step-by-Step Guide
+ 1. Open Task Scheduler
+  • Press Win + R, type taskschd.msc, and press Enter.
+ 2. Create a New Basic Task
+  • In the right pane, click Create Basic Task…
+  • Name it something like: Run Daily Crawlers.
+ 3. Set the Trigger
+  • Choose Daily.
+  • Set the start date.
+  • Set the time: 09:00:00 (9 AM Bulgarian time).
+ 4. Set the Action
+  • Choose Start a program.
+  • Browse to and select the run_crawlers.bat file inside the kosta_hristov_project directory.
+ 5. Finish
+  • Click Finish to create the scheduled task.
 
 ⸻
 
-5. Run Scrapers Manually
+3. Export to Google Sheets (Optional)
 
-To run scrapers yourself:
-	1.	Open the kosta_hristov_project folder.
-	2.	Double-click run_crawlers.bat.
-💡 (Optional: create a desktop shortcut for quick access).
+To enable export of data to Google Sheets, you need to configure access to your Google account:
+ • Follow this guide:
+👉 Setting up Google Sheets for web scraping - https://scrapfly.io/blog/web-scraping-to-google-sheets/#setting-up-google-sheets-for-web-scraping
+
+📌 Important
+ • Save the downloaded JSON credentials file as:
+  kosta_hristov_credentials.json
+ • Place it directly inside the kosta_hristov_project directory.
+ • Share the target Google Sheet with the service account email found in the credentials file — it usually ends with @<your-project>.iam.gserviceaccount.com.
+
+⸻
+
+4. Export to Excel + Google Drive (Alternative to Sheets)
+
+If you prefer exporting to Excel instead of using the Google Sheets API, you can sync it to Google Drive automatically:
+
+📁 Use Google Drive as a Synced Folder on Windows
+
+ 1. Install Google Drive for Desktop.
+ 2. After installation, sign in with your Google account.
+ 3. Google Drive will appear as a drive (e.g., G:\My Drive) or a folder under C:\Users\YourName\Google Drive.
+ 4. Save your Excel file (e.g., Escape Rooms - Statuses.xlsx) directly into a synced folder.
+ 5. The file will be automatically uploaded and synced to your Google Drive cloud storage.
+
+💡 This method avoids Google Sheets API usage and still makes your data accessible in Google Drive.
+
+⸻
+
+5. Run Scrapers Manually (Without Scheduler)
+
+To run scrapers manually:
+ • Navigate to the kosta_hristov_project directory.
+ • Double-click the run_crawlers.bat file.
+
+💡 You can also create a desktop shortcut to run_crawlers.bat for easier access.
