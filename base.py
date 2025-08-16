@@ -137,7 +137,9 @@ class RoomsCrawler(DriverExtension):
 
             # Write room name and URL if not present
             worksheet.update("A1", [[room]])
+            sleep(1)
             worksheet.update("C1", [[room_url]])
+            sleep(1)
 
             # === Multi-week layout (repeat your existing weekly block for every week present in entries) ===
 
@@ -212,6 +214,7 @@ class RoomsCrawler(DriverExtension):
 
                         # Write time in column A if empty (same as your logic)
                         time_cell_value = worksheet.cell(row_num, 1).value
+                        sleep(1)
                         if not time_cell_value:
                             worksheet.update(f"A{row_num}", [[time]])
                             sleep(1)
@@ -232,6 +235,7 @@ class RoomsCrawler(DriverExtension):
 
                         # Write time string into the date column if empty (same as before)
                         cell_value = worksheet.cell(row_num, col_idx + 2).value
+                        sleep(1)
                         if not cell_value:
                             worksheet.update(f"{col_letter}{row_num}", [[time]])
                             sleep(1)
@@ -249,6 +253,7 @@ class RoomsCrawler(DriverExtension):
                         col_letter = chr(ord("B") + i)
                         for j in range(header_row + 1, header_row + 1 + len(used_times)):
                             val = worksheet.cell(j, i + 2).value
+                            sleep(1)
                             if not val:
                                 format_cell_range(worksheet, f"{col_letter}{j}", CellFormat(backgroundColor=Color(1.0, 0.85, 0.6)))
                                 sleep(1)
@@ -312,6 +317,7 @@ class RoomsCrawler(DriverExtension):
         week_found = False
         for row in range(1, ws.max_row + 1):
             values = [ws.cell(row=row, column=col).value for col in range(2, 9)]
+            sleep(5)
             if values == headers:
                 header_row = row
                 week_found = True
@@ -324,12 +330,14 @@ class RoomsCrawler(DriverExtension):
             for i, header in enumerate(headers, start=2):
                 cell = ws.cell(row=header_row, column=i)
                 cell.value = header
+                sleep(1)
                 cell.font = Font(bold=True)
 
             # Write week start date in A{header_row - 1}
             week_start_full = week_start.strftime("%d.%m.%Y")
             date_cell = ws.cell(row=header_row - 1, column=1)
             date_cell.value = week_start_full
+            sleep(1)
             date_cell.font = Font(italic=True, size=10)
             date_cell.alignment = Alignment(horizontal="left")
 
