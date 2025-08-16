@@ -142,102 +142,122 @@ class RoomsCrawler(DriverExtension):
                 return
             target_date_dt = datetime.strptime(target_date, "%Y-%m-%d").date()
 
-            week_start = target_date_dt - timedelta(days=target_date_dt.weekday())
-            week_dates = [(week_start + timedelta(days=i)) for i in range(7)]
-            week_date_strs = [d.strftime("%Y-%m-%d") for d in week_dates]
-            headers = [d.strftime("%d-%m %a") for d in week_dates]
+            # === Multi-week layout (repeat your existing weekly block for every week present in entries) ===
 
-            # Ensure headers exist or write them
-            all_values = worksheet.get_all_values()
-            header_row = None
-            for r, row in enumerate(all_values, start=1):
-                if row[1:8] == headers:
-                    header_row = r
-                    break
-
-            if header_row is None:
-                header_row = len(all_values) + 3
-                for i, header in enumerate(headers):
-                    col_letter = chr(ord("B") + i)
-                    worksheet.update(f"{col_letter}{header_row}", [[header]])
-                    format_cell_range(worksheet, f"{col_letter}{header_row}", CellFormat(textFormat=TextFormat(bold=True)))
-
-            # Mark current date header in pink
-            today_str = datetime.now().strftime("%Y-%m-%d")
-            if today_str in week_date_strs:
-                today_col_idx = week_date_strs.index(today_str)
-                today_col_letter = chr(ord("B") + today_col_idx)
-                format_cell_range(
-                    worksheet,
-                    f"{today_col_letter}{header_row}",
-                    CellFormat(backgroundColor=Color(1.0, 0.8, 0.9)),  # pink
-                )
-
-            # Add week start in full format at top-left (A-column)
-            week_start_full = week_start.strftime("%Y.%m.%d")
-            worksheet.update(f"A{header_row - 1}", [[week_start_full]])
-            format_cell_range(
-                worksheet, f"A{header_row - 1}", CellFormat(textFormat=TextFormat(italic=True, fontSize=10), horizontalAlignment="LEFT")
-            )
-
-            # Write room name and URL if not present
-            worksheet.update("A1", [[room]])
-            worksheet.update("C1", [[room_url]])
-
-            # Build availability lookup for all dates
+            # Build availability lookup & times (kept exactly as your logic expects)
             lookup = {(e["time"], e["date"]): e for e in entries if e.get("time")}
             used_times = sorted(set(e["time"] for e in entries if e.get("time")))
 
-            # Loop through all week dates (or all dates in scraped data if not limited to week)
-            for date in week_date_strs:
-                if date not in {e["date"] for e in entries}:
-                    continue  # Skip if no data for this date
+            # Group scraped dates by their ISO week start (Monday)
+            unique_dates = sorted({e["date"] for e in entries})
+            weeks_map = {}  # { week_start_date(date): set of date_str in that week that we actually have data for }
+            for d_str in unique_dates:
+                dt = datetime.strptime(d_str, "%Y-%m-%d").date()
+                ws_start = dt - timedelta(days=dt.weekday())
+                weeks_map.setdefault(ws_start, set()).add(d_str)
 
-                col_idx = week_date_strs.index(date)
-                col_letter = chr(ord("B") + col_idx)
+            # Iterate weeks in chronological order
+            for week_start in sorted(weeks_map.keys()):
+                # Your week structures (identical format to original single-week block)
+                week_dates = [week_start + timedelta(days=i) for i in range(7)]
+                week_date_strs = [d.strftime("%Y-%m-%d") for d in week_dates]
+                headers = [d.strftime("%d-%m %a") for d in week_dates]
 
-                for i, time in enumerate(used_times):
-                    row_num = header_row + 1 + i
+                # Ensure headers exist (reuse your matching rule B..H == headers)
+                all_values = worksheet.get_all_values()
+                header_row = None
+                for r, row in enumerate(all_values, start=1):
+                    if row[1:8] == headers:
+                        header_row = r
+                        break
 
-                    # Write time in column A if not present already
-                    time_cell_value = worksheet.cell(row_num, 1).value
-                    if not time_cell_value:
-                        worksheet.update(f"A{row_num}", [[time]])
+                if header_row is None:
+                    header_row = len(all_values) + 3
+                    for i, header in enumerate(headers):
+                        col_letter = chr(ord("B") + i)
+                        worksheet.update(f"{col_letter}{header_row}", [[header]])
+                        sleep(1)
+                        format_cell_range(worksheet, f"{col_letter}{header_row}", CellFormat(textFormat=TextFormat(bold=True)))
+                        sleep(1)
 
-                    entry = lookup.get((time, date))
-                    if not entry:
+                # Mark current date header in pink (only if today is in THIS week’s 7-day header)
+                today_str = datetime.now().strftime("%Y-%m-%d")
+                if today_str in week_date_strs:
+                    today_col_idx = week_date_strs.index(today_str)
+                    today_col_letter = chr(ord("B") + today_col_idx)
+                    format_cell_range(
+                        worksheet,
+                        f"{today_col_letter}{header_row}",
+                        CellFormat(backgroundColor=Color(1.0, 0.8, 0.9)),  # pink
+                    )
+                    sleep(1)
+
+                # Add week start in full format at A-(header_row - 1) just like before
+                week_start_full = week_start.strftime("%Y.%m.%d")
+                worksheet.update(f"A{header_row - 1}", [[week_start_full]])
+                sleep(1)
+                format_cell_range(
+                    worksheet, f"A{header_row - 1}", CellFormat(textFormat=TextFormat(italic=True, fontSize=10), horizontalAlignment="LEFT")
+                )
+                sleep(1)
+
+                # Fill grid (dates across columns B..H, times down from header_row+1)
+                # Only write columns for dates we actually have in entries for this week
+                for date in week_date_strs:
+                    if date not in weeks_map[week_start]:
+                        continue  # skip this column if no data for that date
+
+                    col_idx = week_date_strs.index(date)
+                    col_letter = chr(ord("B") + col_idx)
+
+                    for i, time in enumerate(used_times):
+                        row_num = header_row + 1 + i
+
+                        # Write time in column A if empty (same as your logic)
+                        time_cell_value = worksheet.cell(row_num, 1).value
+                        if not time_cell_value:
+                            worksheet.update(f"A{row_num}", [[time]])
+                            sleep(1)
+
+                        entry = lookup.get((time, date))
+                        if not entry:
+                            continue
+
+                        # Color formatting (unchanged)
+                        if entry.get("disabled"):
+                            fmt = CellFormat(backgroundColor=Color(1.0, 0.6, 0.6))  # red
+                        elif entry.get("available") is True:
+                            fmt = CellFormat(backgroundColor=Color(0.8, 1.0, 0.8))  # green
+                        elif entry.get("available") is False:
+                            fmt = CellFormat(backgroundColor=Color(1.0, 0.85, 0.6))  # orange
+                        else:
+                            fmt = None
+
+                        # Write time string into the date column if empty (same as before)
+                        cell_value = worksheet.cell(row_num, col_idx + 2).value
+                        if not cell_value:
+                            worksheet.update(f"{col_letter}{row_num}", [[time]])
+                            sleep(1)
+
+                        if fmt:
+                            format_cell_range(worksheet, f"{col_letter}{row_num}", fmt)
+                            sleep(1)
+
+                # Optional: fill orange background for whole column if "no time & available=False" for that date
+                for i, date in enumerate(week_date_strs):
+                    if date not in weeks_map[week_start]:
                         continue
-
-                    # Color formatting
-                    if entry.get("disabled"):
-                        fmt = CellFormat(backgroundColor=Color(1.0, 0.6, 0.6))  # red
-                    elif entry.get("available") is True:
-                        fmt = CellFormat(backgroundColor=Color(0.8, 1.0, 0.8))  # green
-                    elif entry.get("available") is False:
-                        fmt = CellFormat(backgroundColor=Color(1.0, 0.85, 0.6))  # orange
-                    else:
-                        fmt = None
-
-                    # Write time value in that date column if empty
-                    cell_value = worksheet.cell(row_num, col_idx + 2).value
-                    if not cell_value:
-                        worksheet.update(f"{col_letter}{row_num}", [[time]])
-
-                    # Apply formatting
-                    if fmt:
-                        format_cell_range(worksheet, f"{col_letter}{row_num}", fmt)
-                        sleep(0.3)
-
-            # Optional: fill orange background for whole column if no time & available=False
-            for i, date in enumerate(week_date_strs):
-                has_empty_time_false = any(e["date"] == date and not e.get("time") and e.get("available") is False for e in entries)
-                if has_empty_time_false:
-                    col_letter = chr(ord("B") + i)
-                    for j in range(header_row + 1, header_row + 1 + len(used_times)):
-                        val = worksheet.cell(j, i + 2).value
-                        if not val:
-                            format_cell_range(worksheet, f"{col_letter}{j}", CellFormat(backgroundColor=Color(1.0, 0.85, 0.6)))
-                            sleep(0.3)
+                    has_empty_time_false = any(
+                        e["date"] == date and not e.get("time") and e.get("available") is False for e in entries
+                    )
+                    if has_empty_time_false:
+                        col_letter = chr(ord("B") + i)
+                        for j in range(header_row + 1, header_row + 1 + len(used_times)):
+                            val = worksheet.cell(j, i + 2).value
+                            if not val:
+                                format_cell_range(worksheet, f"{col_letter}{j}", CellFormat(backgroundColor=Color(1.0, 0.85, 0.6)))
+                                sleep(1)
+            # === end multi-week block ===
 
             self.logger.info(f"✅ Sheet written successfully for {room}")
 
