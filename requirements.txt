@@ -1,0 +1,9 @@
+seleniumbase
+selenium
+pandas
+openpyxl
+curl_cffi
+gspread
+gspread_formatting
+oauth2client
+jsonpath_ng

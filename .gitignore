@@ -1,0 +1,12 @@
+__pycache__
+.DS_Store
+downloaded_files
+errors
+selenium_tmp
+logs
+sent_files
+runs
+archived_runs
+outputs
+processed_domains.csv
+cookies
