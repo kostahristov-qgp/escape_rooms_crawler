@@ -24,7 +24,7 @@ class RoomsCrawler(DriverExtension):
     SAVE_GSHEET: bool = True
     GOOGLE_CREDENTIALS_FILEPATH: str = "kosta_hristov_credentials.json"
 
-    max_days: int = 1  # maximum number of days to click in some crawlers that require to click on each day
+    max_days: int = 3  # maximum number of days to click in some crawlers that require to click on each day
 
     NEXT_BUTTON_PRESSES_NUM: int = 5  # number of times to click next button to scrape more weeks/days to mark always disabled slots
     NEXT_DAYS_SELECTOR: str = ""

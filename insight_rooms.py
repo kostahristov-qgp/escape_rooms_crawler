@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from base import RoomsCrawler
 
@@ -19,16 +19,25 @@ class Insight_roomsCrawler(RoomsCrawler):
         dates = self.safe_find(days_selector, attr="class", multiple=True)
         dates = [date.split("sql_date_")[-1].split(" ")[0] for date in dates]
 
+        fully_booked_today = self.safe_find(".datepick-today.datepick-unselectable", return_element=True)
+
+        today = date.today()
+        today_str = today.strftime("%Y-%m-%d")
+
+        if fully_booked_today:
+            entry = {"date": today_str, "available": False, "time": "full day"}
+            self.entries.append(entry)
+
         days_els = days_els[: self.max_days]
         for day_index, day in enumerate(days_els):
             days_els = self.safe_find(days_selector, return_element=True, multiple=True)
             days_els = days_els[: self.max_days]
             self.make_click(days_els[day_index])
-            self.sleep_random(5, 10)
+            self.sleep_random(4, 8)
 
-            date = dates[day_index]
+            date_str = dates[day_index]
 
-            date_obj = datetime.strptime(date, "%Y-%m-%d")
+            date_obj = datetime.strptime(date_str, "%Y-%m-%d")
 
             weekday_num = date_obj.weekday()
 
@@ -54,7 +63,7 @@ class Insight_roomsCrawler(RoomsCrawler):
                 else:
                     is_available = False
                 entry = {
-                    "date": date,
+                    "date": date_str,
                     "time": time,
                     "available": is_available,
                 }
