@@ -19,11 +19,10 @@ class Insight_roomsCrawler(RoomsCrawler):
         dates = self.safe_find(days_selector, attr="class", multiple=True)
         dates = [date.split("sql_date_")[-1].split(" ")[0] for date in dates]
 
-        
-        days_els = days_els[:self.max_days]
+        days_els = days_els[: self.max_days]
         for day_index, day in enumerate(days_els):
             days_els = self.safe_find(days_selector, return_element=True, multiple=True)
-            days_els = days_els[:self.max_days]
+            days_els = days_els[: self.max_days]
             self.make_click(days_els[day_index])
             self.sleep_random(5, 10)
 
@@ -62,8 +61,6 @@ class Insight_roomsCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = Insight_roomsCrawler("insight_rooms")
-
-
 if __name__ == "__main__":
+    crawler = Insight_roomsCrawler("insight_rooms")
     crawler.run()

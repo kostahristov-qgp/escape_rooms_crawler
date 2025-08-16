@@ -22,11 +22,10 @@ class ThefirsthuntCrawler(RoomsCrawler):
         days_selector = "[data-month]"
         days = self.safe_find(days_selector, return_element=True, multiple=True)
 
-        
-        days = days[:self.max_days]
+        days = days[: self.max_days]
         for day_index, day in enumerate(days):
             days = self.safe_find(days_selector, return_element=True, multiple=True)
-            days = days[:self.max_days]
+            days = days[: self.max_days]
             self.make_click(days[day_index])
             self.sleep_random(7, 12)
 
@@ -56,8 +55,6 @@ class ThefirsthuntCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = ThefirsthuntCrawler("thefirsthunt")
-
-
 if __name__ == "__main__":
+    crawler = ThefirsthuntCrawler("thefirsthunt")
     crawler.run()

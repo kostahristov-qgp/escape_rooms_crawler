@@ -50,8 +50,6 @@ class MystCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = MystCrawler("myst")
-
-
 if __name__ == "__main__":
+    crawler = MystCrawler("myst")
     crawler.run()

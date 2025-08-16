@@ -58,8 +58,6 @@ class InfinityescapeCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = InfinityescapeCrawler("infinityescape")
-
-
 if __name__ == "__main__":
+    crawler = InfinityescapeCrawler("infinityescape")
     crawler.run()

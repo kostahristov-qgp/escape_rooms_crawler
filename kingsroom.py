@@ -15,7 +15,7 @@ class KingsroomCrawler(RoomsCrawler):
         },
     ]
 
-    NEXT_DAYS_SELECTOR = 'a.next.next-week'
+    NEXT_DAYS_SELECTOR = "a.next.next-week"
 
     def scrape_room(self):
         days = self.safe_find("#calendar table", return_element=True, multiple=True)
@@ -47,8 +47,6 @@ class KingsroomCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = KingsroomCrawler("kingsroom")
-
-
 if __name__ == "__main__":
+    crawler = KingsroomCrawler("kingsroom")
     crawler.run()

@@ -37,8 +37,7 @@ class FunkymonkeysCrawler(RoomsCrawler):
                 entry = {"date": booked_date, "available": False}
                 self.entries.append(entry)
 
-        
-        for day in days[:self.max_days]:
+        for day in days[: self.max_days]:
             self.make_click(day)
             self.sleep_random(15, 20)
 
@@ -65,8 +64,6 @@ class FunkymonkeysCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = FunkymonkeysCrawler("funkymonkeys")
-
-
 if __name__ == "__main__":
+    crawler = FunkymonkeysCrawler("funkymonkeys")
     crawler.run()

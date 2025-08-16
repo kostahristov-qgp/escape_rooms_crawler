@@ -19,7 +19,7 @@ class HorrorhouseCrawler(RoomsCrawler):
 
         booked_dates = sorted([saved_date for saved_date in booked_dates if datetime.strptime(saved_date, "%Y-%m-%d").date() >= date.today()])
 
-        for booked_date in booked_dates[:self.max_days]:
+        for booked_date in booked_dates[: self.max_days]:
             if datetime.strptime(booked_date, "%Y-%m-%d").date() >= date.today():
                 entry = {"date": booked_date, "available": False, "time": "full day"}
                 self.entries.append(entry)
@@ -51,8 +51,6 @@ class HorrorhouseCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = HorrorhouseCrawler("horrorhouse")
-
-
 if __name__ == "__main__":
+    crawler = HorrorhouseCrawler("horrorhouse")
     crawler.run()

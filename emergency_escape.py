@@ -71,8 +71,6 @@ class Emergency_escapeCrawler(RoomsCrawler):
         return date
 
 
-crawler = Emergency_escapeCrawler("emergency_escape")
-
-
 if __name__ == "__main__":
+    crawler = Emergency_escapeCrawler("emergency_escape")
     crawler.run()

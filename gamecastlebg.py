@@ -15,7 +15,7 @@ class GamecastlebgCrawler(RoomsCrawler):
         },
     ]
 
-    NEXT_DAYS_SELECTOR = 'a.next-week.next'
+    NEXT_DAYS_SELECTOR = "a.next-week.next"
 
     def scrape_room(self):
         days = self.safe_find("tr#calendar table", return_element=True, multiple=True)
@@ -48,8 +48,6 @@ class GamecastlebgCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = GamecastlebgCrawler("gamecastlebg")
-
-
 if __name__ == "__main__":
+    crawler = GamecastlebgCrawler("gamecastlebg")
     crawler.run()

@@ -45,8 +45,6 @@ class EnigmaniaCrawler(RoomsCrawler):
             self.entries.append(entry)
 
 
-crawler = EnigmaniaCrawler("enigmania")
-
-
 if __name__ == "__main__":
+    crawler = EnigmaniaCrawler("enigmania")
     crawler.run()

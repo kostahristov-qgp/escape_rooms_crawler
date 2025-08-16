@@ -54,7 +54,6 @@ class QuestomaniaCrawler(RoomsCrawler):
                 entry = {"date": formatted_date, "time": time, "available": True}
                 self.entries.append(entry)
 
-
             not_available_times = self.safe_find("span[data-date]", return_element=True, search_element=day, multiple=True)
 
             for not_available_time in not_available_times:
@@ -66,8 +65,6 @@ class QuestomaniaCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = QuestomaniaCrawler("questomania")
-
-
 if __name__ == "__main__":
+    crawler = QuestomaniaCrawler("questomania")
     crawler.run()

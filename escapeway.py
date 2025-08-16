@@ -43,8 +43,6 @@ class EscapewayCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = EscapewayCrawler("escapeway")
-
-
 if __name__ == "__main__":
+    crawler = EscapewayCrawler("escapeway")
     crawler.run()

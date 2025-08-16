@@ -87,5 +87,4 @@ class RobCrawler(RoomsCrawler):
 
 if __name__ == "__main__":
     crawler = RobCrawler("rob")
-
     crawler.run()

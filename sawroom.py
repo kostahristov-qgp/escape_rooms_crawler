@@ -68,8 +68,6 @@ class SawroomCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = SawroomCrawler("sawroom")
-
-
 if __name__ == "__main__":
+    crawler = SawroomCrawler("sawroom")
     crawler.run()

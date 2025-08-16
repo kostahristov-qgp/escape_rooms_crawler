@@ -18,8 +18,7 @@ class TeoremaCrawler(RoomsCrawler):
     def scrape_room(self):
         days = self.safe_find("[data-date]:not(.prev-date)", return_element=True, multiple=True)
 
-        
-        for day in days[:self.max_days]:
+        for day in days[: self.max_days]:
             self.make_click(day)
             self.sleep_random(15, 20)
 
@@ -46,8 +45,6 @@ class TeoremaCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = TeoremaCrawler("teorema")
-
-
 if __name__ == "__main__":
+    crawler = TeoremaCrawler("teorema")
     crawler.run()

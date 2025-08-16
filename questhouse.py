@@ -85,8 +85,6 @@ class QuesthouseCrawler(RoomsCrawler):
                     self.entries.append(entry)
 
 
-crawler = QuesthouseCrawler("questhouse")
-
-
 if __name__ == "__main__":
+    crawler = QuesthouseCrawler("questhouse")
     crawler.run()

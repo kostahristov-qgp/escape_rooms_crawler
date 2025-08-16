@@ -49,8 +49,6 @@ class OfflineCrawler(RoomsCrawler):
                 self.entries.append(entry)
 
 
-crawler = OfflineCrawler("offline")
-
-
 if __name__ == "__main__":
+    crawler = OfflineCrawler("offline")
     crawler.run()

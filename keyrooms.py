@@ -30,19 +30,19 @@ class KeyroomsCrawler(RoomsCrawler):
     def scrape_room(self):
         days_selector = "div.DOPBSPCalendar-day:not(.dopbsp-past-day)"
         days_els = self.safe_find(days_selector, return_element=True, multiple=True)
-        
+
         processed_days = 0
-        days_els = days_els[:self.max_days]
+        days_els = days_els[: self.max_days]
         for day_index, day in enumerate(days_els):
             if processed_days >= 7:
                 break
             days_els = self.safe_find(days_selector, return_element=True, multiple=True)
-            days_els = days_els[:self.max_days]
+            days_els = days_els[: self.max_days]
             self.make_click(days_els[day_index])
             self.sleep_random(5, 10)
 
             days_els = self.safe_find(days_selector, return_element=True, multiple=True)
-            days_els = days_els[:self.max_days]
+            days_els = days_els[: self.max_days]
             try:
                 date = days_els[day_index].get_attribute("id").split("_")[-1]
             except StaleElementReferenceException:
@@ -80,8 +80,6 @@ class KeyroomsCrawler(RoomsCrawler):
             processed_days += 1
 
 
-crawler = KeyroomsCrawler("keyrooms")
-
-
 if __name__ == "__main__":
+    crawler = KeyroomsCrawler("keyrooms")
     crawler.run()
