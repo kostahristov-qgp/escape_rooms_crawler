@@ -26,7 +26,7 @@ class InfinityescapeCrawler(RoomsCrawler):
         self.sleep_random(10, 20)
 
         days = self.safe_find(
-            "button.keyhowl-reservation-form-cache-zsvzxq:not(.Mui-disabled), .MuiPickersDay-today:not(.Mui-disabled)",
+            ".MuiButtonBase-root.MuiPickersDay-root:not(.Mui-disabled), .MuiPickersDay-today:not(.Mui-disabled)",
             return_element=True,
             multiple=True,
         )

@@ -38,7 +38,7 @@ class SawroomCrawler(RoomsCrawler):
                 pass
 
         days = self.safe_find(
-            "button.keyhowl-reservation-form-cache-1irg3fc:not([disabled]), .MuiPickersDay-today", return_element=True, multiple=True
+            ".MuiButtonBase-root.MuiPickersDay-root:not(.Mui-disabled), .MuiPickersDay-today:not(.Mui-disabled)", return_element=True, multiple=True
         )
 
         for day in days[: self.max_days]:
