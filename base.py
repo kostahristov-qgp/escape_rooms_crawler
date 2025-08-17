@@ -210,7 +210,7 @@ class RoomsCrawler(DriverExtension):
                     )
                     sleep(1)
 
-                # Add week start in full format at A-(header_row - 1) just like before
+                # Add week start in full format at A-(header_row - 1)
                 week_start_full = week_start.strftime("%Y.%m.%d")
                 worksheet.update(f"A{header_row - 1}", [[week_start_full]])
                 sleep(1)
@@ -231,12 +231,12 @@ class RoomsCrawler(DriverExtension):
                     for i, time in enumerate(used_times):
                         row_num = header_row + 1 + i
 
-                        # Write time in column A if empty (same as your logic)
-                        time_cell_value = worksheet.cell(row_num, 1).value
-                        sleep(1)
-                        if not time_cell_value:
-                            worksheet.update(f"A{row_num}", [[time]])
-                            sleep(1)
+                        # # Write time in column A if empty
+                        # time_cell_value = worksheet.cell(row_num, 1).value
+                        # sleep(1)
+                        # if not time_cell_value:
+                        #     worksheet.update(f"A{row_num}", [[time]])
+                        #     sleep(1)
 
                         entry = lookup.get((time, date))
                         if not entry:
@@ -255,7 +255,7 @@ class RoomsCrawler(DriverExtension):
                         # Write time string into the date column if empty (same as before)
                         cell_value = worksheet.cell(row_num, col_idx + 2).value
                         sleep(1)
-                        if not cell_value:
+                        if cell_value != time:
                             worksheet.update(f"{col_letter}{row_num}", [[time]])
                             sleep(1)
 
