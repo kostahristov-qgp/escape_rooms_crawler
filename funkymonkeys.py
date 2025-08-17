@@ -34,7 +34,7 @@ class FunkymonkeysCrawler(RoomsCrawler):
 
         for booked_date in booked_dates:
             if datetime.strptime(booked_date, "%Y-%m-%d") > datetime.today():
-                entry = {"date": booked_date, "available": False}
+                entry = {"date": booked_date, "available": False, "time": "full day"}
                 self.entries.append(entry)
 
         for day in days[: self.max_days]:
