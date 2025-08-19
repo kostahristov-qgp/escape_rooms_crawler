@@ -10,6 +10,7 @@ horrorhouse
 infinityescape
 insight_rooms
 keyrooms
+kingsroom
 myst
 offline
 questhouse
